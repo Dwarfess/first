@@ -1,0 +1,153 @@
+<!DOCTYPE HTML>
+<html lang="ru">
+<head>
+	<meta charset = "utf-8">
+	<meta name="viewport" content="width=device-width">
+	<link type="text/css" rel="stylesheet/less" href="learn math.less">
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	
+	<title>Изучай математику весело</title>
+</head>
+
+<body>
+    <article>
+
+    </article>
+       
+    <footer>
+        <h3>Жми на пузырек с правильным ответом</h3>
+        <div>
+            <p>Сколько будет: <span>123</span>?</p>
+        </div>
+        <span class="toggle">
+            <input type="checkbox">
+            <label data-off="Stop" data-on="Play"></label>
+        </span>
+        
+    </footer>
+        
+
+    
+    <script src="js/less.js" type="text/javascript"></script>
+    <script src="js/js/jquery.js" type="text/javascript"></script>
+    <script src="js/jquery.color.js" type="text/javascript"></script>
+    <script src="js/js/jquery-ui.js" type="text/javascript"></script>	
+    
+    
+    <script>
+        $(document).ready(function(){
+            
+            //insert a random example
+            var x = parseInt(Math.random()*9+1);
+            var y = parseInt(Math.random()*9+1);
+            $('footer').find('span').first().text(x+'x'+y);
+
+            
+            //create div with bubble and fill attr
+            for(i=0;i<11;i++){
+                var bubble = ".bubble:nth-of-type("+(i+1)+")";
+                
+                var r1 = ((parseInt(Math.random()*9))+1)+(i*8);//for left position
+                var r2 = (parseInt(Math.random()*9))+5;//for width of bubble 
+                var r3 = Math.floor(Math.random()*16777215).toString(16);//for choise bg-color
+                var r4 = (parseInt(Math.random()*10))*x;//for value of bubble
+                
+                //create div
+                $('article').append('<div class="bubble"><img src="images/bubble.png"><p>'+r4+'</p></div>');
+                
+                //add style (margin, width, font-size, bg-color)
+                $(bubble).attr("style", "margin-left:"+r1+"%;width:"+r2+"%; font-size:"+(40+(r2*9))+"%; background:#"+r3+"");
+                
+            }
+            
+            var counter = 0;//for switching between first and second option
+            //click for animate our bubble
+            $("input").click(function (){
+                if(!counter){
+                    counter++;
+                    for(i=0;i<11;i++){
+                        var bubble = ".bubble:nth-of-type("+(i+1)+")";
+
+                        var w = $(".bubble:nth-of-type("+(i+1)+")").width();//width this bubble
+                        var a = ($("article").height()) - w;//for define height - width of this bubble
+
+                        var r1 = Math.floor(Math.random()*16777215).toString(16);//for change bg-color
+                        var r2 = 1000*((parseInt(Math.random()*20))+3);//for speed of change
+
+                        $(bubble).show().animate({bottom:''+a+'px', backgroundColor: "#"+r1+""},r2,go);
+
+                    }
+                }
+                else {
+                    counter--;
+                    $('.bubble').stop();//stop all animation
+                }
+			});
+			
+            //if bubble reached top or click to bubble is wrong
+			function go(){
+                var x = $('footer').find('span').first().text().substr(0,1);//first numeral of example
+                
+                $(this).hide('puff',{percent:300}, 1000, function(){
+                    var r1 = ((parseInt(Math.random()*9))+1)*10;//for left position
+                    var r2 = (parseInt(Math.random()*9))+5;//for width of bubble 
+                    var r3 = Math.floor(Math.random()*16777215).toString(16);//for choise bgCol
+                    var r4 = (parseInt(Math.random()*10))*x;//for value of bubble
+                    var r5 = 1000*((parseInt(Math.random()*20))+3);//for speed of change
+                    var r6 = Math.floor(Math.random()*16777215).toString(16);//for choise bgCol
+                            
+                    $(this).html('<img src="images/bubble.png"><p>'+r4+'</p>');
+                    $(this).attr("style", "margin-left:"+r1+"%;width:"+r2+"%; bottom:0; font-size:"+(40+(r2*9))+"%; background:#"+r3+"");
+                            
+                    var w = $(this).width();//width this bubble
+                    var a = ($("article").height()) - w; //for define height of this bubble
+
+                    $(this).show().animate({bottom:''+a+'px', backgroundColor: "#"+r6+""},r5,go);
+                });
+			}
+            
+            
+            //function check the answer
+            $('.bubble').click(function(){
+                var x = $('footer').find('span').first().text().substr(0,1);//first numeral of example
+                var y = $('footer').find('span').first().text().substr(2,1);//second numeral of example
+                
+                if($(this).find('p').text()==x*y){//check first * second numeral of example
+                    $('.bubble').stop();
+                    $('<div class="screenOff">').appendTo('body').css({position:'absolute',top:'0',left:'0',bottom:'0',right:'0'});
+                    
+                    $(this).animate({marginLeft:'25%', bottom:'15%',width:'50%', fontSize:'800%'},5000);
+                    $(this).hide('puff',{percent:300}, 1000, function(){
+                            
+                        //insert a random example
+                        var x1 = parseInt(Math.random()*9+1);
+                        var y1 = parseInt(Math.random()*9+1);
+                        $('footer').find('span').first().text(x1+'x'+y1);
+                        
+                        for(i=0;i<11;i++){
+                            var bubble = ".bubble:nth-of-type("+(i+1)+")";
+
+                            var r1 = ((parseInt(Math.random()*9))+1)+(i*8);//for left position
+                            var r2 = (parseInt(Math.random()*9))+5;//for width of bubble 
+                            var r3 = Math.floor(Math.random()*16777215).toString(16);//for choise bg-color
+                            var r4 = (parseInt(Math.random()*10))*x1;//for value of bubble
+
+                            $(bubble).html('<img src="images/bubble.png"><p>'+r4+'</p>');   
+                            $(bubble).hide().attr("style", "bottom:0; margin-left:"+r1+"%;width:"+r2+"%; font-size:"+(40+(r2*9))+"%; background:#"+r3+"");
+                        }
+                        
+                        $("input:checkbox").removeAttr("checked");
+                        $('.screenOff').remove();
+                        counter--;                       
+                    });
+                }
+                    else {
+                        $(this).stop().animate({backgroundColor:'red'}, 500, go);
+                    }
+            });
+		});
+	</script>
+</body>
+</html>
+
+
