@@ -1,1 +1,1 @@
-[Test](./learn math.html)
+[Test](./index.html)
